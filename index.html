@@ -14,11 +14,14 @@
 
         .myGrid>div {
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .myForm {
             display: grid;
-            grid-template-columns: repeat(2, auto);
+            grid-template-columns: repeat(2, 150px);
         }
     </style>
 </head>
@@ -26,22 +29,21 @@
 <body>
     <div id="app"></div>
     <script>
-        updateView();
+        let model;
+        init();
         function updateView() {
-
             document.getElementById('app').innerHTML = /*HTML*/`
                 ${createFormHtml()}
                 <div class="myGrid">
                     ${createSquaresHtml()}
                 </div>
             `;
-
         }
 
         function createSquaresHtml() {
             let html = '';
             for (let index = 0; index < 64; index++) {
-                let textObject = texts.find(to => to.index == index);
+                let textObject = model.textObjects.find(to => to.index == index);
                 if (!textObject) {
                     html += /*HTML*/`<div><button>fyll</button></div>`;
                 } else {
@@ -88,17 +90,21 @@
                 `;
         }
 
-        const model = {
-            inputs: {
-                foreColor: '',
-                backColor: '',
-                text: '',
-            },
-            colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
-            textObjects: [
-                { index: 17, text: 'Terje', backColor: 'green', foreColor: 'white' },
-            ]
-        };
+        
+        function init() {
+            model = {
+                inputs: {
+                    foreColor: '',
+                    backColor: '',
+                    text: '',
+                },
+                colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
+                textObjects: [
+                    { index: 17, text: 'Terje', backColor: 'green', foreColor: 'white' },
+                ]
+            };
+            updateView();
+        }
     </script>
 
 </body>
