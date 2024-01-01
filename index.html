@@ -45,7 +45,7 @@
             for (let index = 0; index < 64; index++) {
                 let textObject = model.textObjects.find(to => to.index == index);
                 if (!textObject) {
-                    html += /*HTML*/`<div><button>fyll</button></div>`;
+                    html += /*HTML*/`<div><button onclick="claim(${index})">fyll</button></div>`;
                 } else {
                     html += /*HTML*/`
                         <div style="color: ${textObject.foreColor}; background-color: ${textObject.backColor}">
@@ -77,6 +77,7 @@
         function createColorSelect(modelField) {
             const selectedColor = eval(modelField);
             let optionsHtml = '';
+            const noneSelected = selectedColor == null ? 'selected' : '';
             for (let color of model.colors) {
                 const selected = color == selectedColor ? 'selected' : '';
                 optionsHtml += /*HTML*/`
@@ -85,18 +86,34 @@
             }
             return /*HTML*/`    
                 <select onchange="${modelField}=this.value">
+                    <option ${noneSelected}></option>
                     ${optionsHtml}
                 </select>
                 `;
         }
 
-        
+        function claim(index) {
+            const inputs = model.inputs;
+            if (inputs.foreColor == null
+                || inputs.backColor == null
+                || inputs.text == null
+                || inputs.text.trim().length == 0
+            ) return;
+            model.textObjects.push({ ...inputs, index });
+            model.inputs = {
+                foreColor: null,
+                backColor: null,
+                text: null,
+            };
+            updateView();
+        }
+
         function init() {
             model = {
                 inputs: {
-                    foreColor: '',
-                    backColor: '',
-                    text: '',
+                    foreColor: null,
+                    backColor: null,
+                    text: null,
                 },
                 colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
                 textObjects: [
